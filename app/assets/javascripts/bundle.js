@@ -95,20 +95,17 @@
 
 const apiUtil = {
     unfollow: (userId) => { 
-      debugger
       return $.ajax({
       method: "DELETE",
       url: `/users/${userId}/follow`,
-      dataType: JSON
+      dataType: "JSON"
     });
   },
   follow: (userId) => { 
-    // debugger
     return $.ajax({
     method: "POST",
     url: `/users/${userId}/follow`,
-    dataType: JSON
-
+    dataType: "JSON"
   });
 }
 };
@@ -127,16 +124,14 @@ module.exports = apiUtil;
 const apiUtil = __webpack_require__(/*! ./api_util.js */ "./frontend/api_util.js");
 class FollowToggle {
   constructor(el) {
-    this.$el = $(el);
-    debugger
-      this.userId = this.$el.data("userId");
-      this.followState = this.$el.data("initialFollowState");
+      this.$el = $(el);
+      this.userId = this.$el.data("user-id");
+      this.followState = this.$el.data("initial-follow-state");
       this.$el.on("click", this.handleClick.bind(this));
       this.render();
   }
 
   render() {
-    debugger
     if (this.followState === "followed") {
       this.$el.text("unfollow");
     }
@@ -149,13 +144,13 @@ class FollowToggle {
     event.preventDefault();
     if (this.followState === "followed") {
       const un = apiUtil.unfollow(this.userId).then(() => {
-        debugger
-        console.log("success");
+        this.followState = "unfollowed";
+        this.render();
       }, () => console.log("fail"));
     } else {
       const fol = apiUtil.follow(this.userId).then(() => {
-        debugger
-        console.log("success");
+        this.followState = "followed";
+        this.render();
       }, () => console.log("fail"));
     }
   }
@@ -173,17 +168,44 @@ module.exports = FollowToggle;
 /***/ (function(module, exports, __webpack_require__) {
 
 const followToggle = __webpack_require__(/*! ./follow_toggle.js */ "./frontend/follow_toggle.js");
-
+const UserSearch = __webpack_require__(/*! ./users_search.js */ "./frontend/users_search.js");
 
 
 
 $( ()=> {
+  const $users = $("nav.users-search");
   const $buttons = $('button.follow-toggle');
+  $users.each(function (i) {
+    new UserSearch(this);
+  });
 
   $buttons.each(function (i) {
     new followToggle(this);
   });
 }); 
+
+
+
+
+/***/ }),
+
+/***/ "./frontend/users_search.js":
+/*!**********************************!*\
+  !*** ./frontend/users_search.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+class UsersSearch{
+  constructor(el) {
+    const $el = $(el);
+    const $input = $el.find('input[type="text"]');
+    const $ul = $('ul');
+  }
+
+}
+
+module.exports = UsersSearch;
 
 /***/ })
 
